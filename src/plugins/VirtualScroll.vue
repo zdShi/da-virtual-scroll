@@ -75,13 +75,6 @@ export default {
        * startIndex代表的数据的截取起始位置
        * this.startIndex代表屏幕显示内最顶部的item在数据中的index
        * containerMaxCount代表的是视口内多可展示的item的数量*/
-      // let startIndex = 0;
-      // //如果当前显示的顶部index小于可以显示数量，那么从0开始截取，可以保留顶部一屏的数据
-      // if (this.startIndex <= this.containerMaxCount) {
-      //   startIndex = 0;
-      // } else {
-      //   startIndex = this.startIndex - this.containerMaxCount;
-      // }
       let sliceStart =
         this.startIndex - this.containerMaxCount > 0
           ? this.startIndex - this.containerMaxCount
@@ -145,6 +138,7 @@ export default {
         this.startIndex + this.containerMaxCount > this.dataList.length - 1 &&
         !this.isRequestStatus
       ) {
+        // console.log(this.sliceEnd, this.dataList.length);
         this.$emit("moreData", 10);
       }
     },
