@@ -6,7 +6,14 @@
       :loadingTips="loadingTips"
       :isRequestStatus="isRequestStatus"
       @moreData="getData"
-    />
+      v-slot:default="newitem"
+    >
+      <section>
+        <h3>{{ newitem.vsItem.title }}</h3>
+        <p>{{ newitem.vsItem.from }}</p>
+        <span>{{ newitem.vsItem.date }}</span>
+      </section>
+    </VirtualScroll>
   </div>
 </template>
 

@@ -7,9 +7,7 @@
   >
     <div :style="fillBlank">
       <div v-for="item in sliceDataList" :key="item.id" class="item_style">
-        <h3>{{ item.title }}</h3>
-        <p>{{ item.from }}</p>
-        <span>{{ item.date }}</span>
+        <slot :vsItem="item" />
       </div>
       <!--提示信息-->
       <div v-if="isRequestStatus" class="loadingTips">
@@ -51,12 +49,6 @@ export default {
       currentScrollTop: 0,
     };
   },
-  async created() {
-    // console.log(this.getData);
-    // let newList = await this.$emit("getDate", this.requestDataCount);
-    // if (!newList) return;
-    // this.dataList = newList;
-  },
   mounted() {
     this.setContainerMaxCount();
     window.onresize = this.setContainerMaxCount;
@@ -70,7 +62,7 @@ export default {
   computed: {
     //容器的最后一个item的索引
     sliceEnd() {
-      let sliceEnd = this.startIndex + this.containerMaxCount;
+      let sliceEnd = this.startIndex + this.containerMaxCount * 2;
       //如果数据源中不存在该index，则取数据源最后一个
       if (!this.dataList[sliceEnd]) {
         sliceEnd = this.dataList.length - 1;
