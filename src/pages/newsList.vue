@@ -37,6 +37,8 @@ export default {
       containerMaxCount: 0,
       //记录当前第一个item的偏移
       startIndex: 0,
+      //滚动的状态，用来判断是否云处理滚动事件
+      isScrollStatus: true,
     };
   },
   async created() {
@@ -98,15 +100,25 @@ export default {
       // console.log(this.containerMaxCount);
     },
     async handleScroll() {
-      //获取当前顶部item的index
-      let currentIndex = ~~(
-        this.$refs.scrollContainer.scrollTop / this.itemHeight
-      );
-      //如果滚动发生在同一个item内，不进行其他处理
-      if (currentIndex === this.startIndex) return;
-      this.startIndex = currentIndex;
-      //上拉加载新数据
-      await this.getNewData();
+      //判断是否允许处理滚动事件
+      if (this.isScrollStatus) {
+        this.isScrollStatus = false;
+        // 中后可以再次处理滚动事件，至于事件的设置一般是按照屏幕的刷新率来设置
+        let timer = setTimeout(() => {
+          this.isScrollStatus = true;
+          clearTimeout(timer);
+        }, 30);
+        //获取当前顶部item的index
+        let currentIndex = ~~(
+          this.$refs.scrollContainer.scrollTop / this.itemHeight
+        );
+        //如果滚动发生在同一个item内，不进行其他处理
+        if (currentIndex === this.startIndex) return;
+        this.startIndex = currentIndex;
+        //上拉加载新数据
+        await this.getNewData();
+      }
+      //添加定时器节流
     },
     //上拉加载新数据
     async getNewData() {
@@ -115,7 +127,7 @@ export default {
         this.startIndex + this.containerMaxCount > this.dataList.length - 1 &&
         !this.isRequestStatus
       ) {
-        console.log("到底部了，可以开始加载了");
+        // console.log("到底部了，可以开始加载了");
         let newList = await this.getData(20);
         if (!newList) return;
         //合并新的数据
